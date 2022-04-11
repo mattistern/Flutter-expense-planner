@@ -41,13 +41,15 @@ class Chart extends StatelessWidget {
       elevation: 6,
       margin: const EdgeInsets.all(20),
       child: Row(
-          children: transactionsValues.map((data) {
-        return ChartBar(
-          lable: data['day'],
-          spendingAmount: data['amount'],
-          spendingPctOfTotle: (data['amount'] as double) / totalSpendings,
-        );
-      }).toList()),
+        children: transactionsValues.map((data) {
+          print((data['amount'] as double) / totalSpendings);
+          return ChartBar(
+            lable: data['day'],
+            spendingAmount: data['amount'],
+            spendingPctOfTotle: (data['amount'] as double) / totalSpendings,
+          );
+        }).toList(),
+      ),
     );
   }
 }

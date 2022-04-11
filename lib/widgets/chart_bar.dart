@@ -14,8 +14,9 @@ class ChartBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('\$ $spendingAmount'),
+        Text('\$$spendingAmount'),
         SizedBox(
           height: 4,
         ),
