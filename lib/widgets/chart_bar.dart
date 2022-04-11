@@ -16,7 +16,9 @@ class ChartBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('\$$spendingAmount'),
+        FittedBox(
+          child: Text('\$$spendingAmount'),
+        ),
         SizedBox(
           height: 4,
         ),
