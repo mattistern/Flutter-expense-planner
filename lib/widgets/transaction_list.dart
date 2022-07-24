@@ -6,8 +6,9 @@ import './tile_list_view.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTransaction;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.deleteTransaction);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class TransactionList extends StatelessWidget {
       children: [
         ...transactions.map((tx) {
           //return CardList(tx);
-          return TileListView(tx);
+          return TileListView(tx, deleteTransaction);
         }).toList(),
       ],
     );
