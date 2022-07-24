@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
@@ -10,23 +11,45 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
-  void onSubmimt() {
-    final titleEntered = titleController.text;
-    final amountEntered = double.parse(amountController.text);
+  void _onSubmimt() {
+    if (_amountController.text.isEmpty) {
+      return;
+    }
 
-    if (titleEntered.isEmpty || amountEntered <= 0) {
+    final titleEntered = _titleController.text;
+    final amountEntered = double.parse(_amountController.text);
+
+    if (titleEntered.isEmpty || amountEntered <= 0 || _selectedDate == null) {
       return;
     }
 
     widget.addNewTransaction(
       titleEntered,
       amountEntered,
+      _selectedDate,
     );
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -37,25 +60,50 @@ class _NewTransactionState extends State<NewTransaction> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           TextField(
             decoration: InputDecoration(labelText: 'Title'),
-            controller: titleController,
+            controller: _titleController,
             onSubmitted: (_) =>
-                onSubmimt(), //we need to provide a String but we don't need it so we use '_'
+                _onSubmimt(), //we need to provide a String but we don't need it so we use '_'
           ),
           TextField(
             decoration: InputDecoration(labelText: 'Amount'),
-            controller: amountController,
+            controller: _amountController,
             keyboardType: TextInputType.number,
             onSubmitted: (_) =>
-                onSubmimt(), //we need to provide a String but we don't need it so we use '_'
+                _onSubmimt(), //we need to provide a String but we don't need it so we use '_'
           ),
-          TextButton(
-            child: Text(
-              'Add Transaction',
-              style: TextStyle(
-                color: Colors.yellow,
-              ),
+          Container(
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _selectedDate == null
+                      ? 'No date chosen!'
+                      : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                ),
+                TextButton(
+                  child: Text(
+                    'Choose date',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: _presentDatePicker,
+                ),
+              ],
             ),
-            onPressed: onSubmimt,
+          ),
+          Center(
+            child: ElevatedButton(
+              child: Text(
+                'Add Transaction',
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.button.color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: _onSubmimt,
+            ),
           ),
         ]),
       ),
